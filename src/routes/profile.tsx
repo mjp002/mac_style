@@ -56,8 +56,8 @@ const resumeContent = `
 <h2>Education</h2>
 <ul>
   <li><strong>Green Computer Academy</strong> — Government-funded Python-based Big Data Analytics bootcamp <em>Dec 2019 – Jun 2020</em></li>
-  <li><strong>Portland Community College</strong> — Associate of Arts Oregon Transfer — Earned 40 credits <em>Jan 2021 – Mar 2023</em></li>
-  <li><strong>Kansas State University</strong> — Life Science — Earned 65 credits</li>
+  <li><strong>Portland Community College</strong> — Associate of Arts Oregon Transfer <em>Jan 2021 – Mar 2023</em></li>
+  <li><strong>Kansas State University</strong> — Life Science</li>
 </ul>
 `;
 
@@ -87,7 +87,8 @@ const ProfileContainer = styled.div<{ darkMode: boolean }>`
   h2 {
     font-size: 1.8em;
     margin-top: 1.5em;
-    border-bottom: 2px solid ${(props) => (props.darkMode ? "#3e3e3e" : "#e1e1e1")};
+    border-bottom: 2px solid
+      ${(props) => (props.darkMode ? "#3e3e3e" : "#e1e1e1")};
     padding-bottom: 0.3em;
   }
 
