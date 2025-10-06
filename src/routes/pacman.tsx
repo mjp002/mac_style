@@ -156,7 +156,6 @@ const PacmanGame = () => {
     { id: 3, position: { x: 13, y: 13 }, color: "#00ffff", direction: { x: 0, y: -1 }, vulnerable: false },
     { id: 4, position: { x: 14, y: 13 }, color: "#ffb852", direction: { x: 0, y: 1 }, vulnerable: false },
   ]);
-  const [powerMode, setPowerMode] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -217,7 +216,6 @@ const PacmanGame = () => {
         // 파워 펠렛 먹기
         if (maze[newY][newX] === 3) {
           setScore((s) => s + 50);
-          setPowerMode(true);
           setGhosts((g) => g.map(ghost => ({ ...ghost, vulnerable: true })));
           setMaze((m) => {
             const newMaze = m.map(row => [...row]);
@@ -225,7 +223,6 @@ const PacmanGame = () => {
             return newMaze;
           });
           setTimeout(() => {
-            setPowerMode(false);
             setGhosts((g) => g.map(ghost => ({ ...ghost, vulnerable: false })));
           }, 6000);
         }
