@@ -24,7 +24,7 @@ const DockContainer = styled.div<{ darkMode: boolean }>`
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 `;
 
-const DockItem = styled.div<{ hasImage: boolean; bgColor?: string }>`
+const DockItem = styled.div<{ hasImage: boolean; bgColor?: string; isAnimating?: boolean }>`
   width: 56px;
   height: 56px;
   margin: 0 5px;
@@ -40,6 +40,19 @@ const DockItem = styled.div<{ hasImage: boolean; bgColor?: string }>`
 
   &:hover {
     transform: translateY(-10px) scale(1.15);
+  }
+
+  ${(props) => props.isAnimating && `
+    animation: bounce 0.5s ease-in-out 2;
+  `}
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
   }
 
   img {
@@ -74,6 +87,7 @@ const Dock = () => {
   const [openApps, setOpenApps] = useState<App[]>([]);
   const [appId, setAppId] = useState(0);
   const [topZIndex, setTopZIndex] = useState(100);
+  const [animatingApp, setAnimatingApp] = useState<string | null>(null);
   const { darkMode } = useTheme();
   const initialPosition = { x: 100, y: 100 };
   const offsetIncrement = 30;
@@ -83,28 +97,36 @@ const Dock = () => {
     url?: string,
     component?: "Settings" | "Portfolio" | "Pacman"
   ) => {
-    const newAppId = appId + 1;
-    setAppId(newAppId);
+    // Trigger bounce animation
+    setAnimatingApp(appName);
 
-    // 화면 크기를 고려한 위치 계산
-    const maxX = window.innerWidth - 800 - 100;
-    const maxY = window.innerHeight - 600 - 100;
+    // Open app after 1 second bounce animation
+    setTimeout(() => {
+      setAnimatingApp(null);
 
-    const newPosition = {
-      x: Math.min(
-        initialPosition.x + ((newAppId * offsetIncrement) % maxX),
-        maxX
-      ),
-      y: Math.min(
-        initialPosition.y + ((newAppId * offsetIncrement) % maxY),
-        maxY
-      ),
-    };
+      const newAppId = appId + 1;
+      setAppId(newAppId);
 
-    setOpenApps((prevApps) => [
-      ...prevApps,
-      { id: newAppId, name: appName, url, component, initialPosition: newPosition },
-    ]);
+      // 화면 크기를 고려한 위치 계산
+      const maxX = window.innerWidth - 800 - 100;
+      const maxY = window.innerHeight - 600 - 100;
+
+      const newPosition = {
+        x: Math.min(
+          initialPosition.x + ((newAppId * offsetIncrement) % maxX),
+          maxX
+        ),
+        y: Math.min(
+          initialPosition.y + ((newAppId * offsetIncrement) % maxY),
+          maxY
+        ),
+      };
+
+      setOpenApps((prevApps) => [
+        ...prevApps,
+        { id: newAppId, name: appName, url, component, initialPosition: newPosition },
+      ]);
+    }, 1000);
   };
 
   const handleCloseApp = (appId: number) => {
@@ -149,6 +171,7 @@ const Dock = () => {
           hasImage={false}
           bgColor="linear-gradient(135deg, #4A9EFF 0%, #1E88E5 100%)"
           onClick={() => handleOpenApp("Finder")}
+          isAnimating={animatingApp === "Finder"}
           title="Finder"
         >
           <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -163,6 +186,7 @@ const Dock = () => {
           hasImage={false}
           bgColor="linear-gradient(135deg, #E3E3E3 0%, #B0B0B0 100%)"
           onClick={() => handleOpenApp("Launchpad")}
+          isAnimating={animatingApp === "Launchpad"}
           title="Launchpad"
         >
           <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -182,24 +206,17 @@ const Dock = () => {
 
         {/* Google Chrome */}
         <DockItem
-          hasImage={false}
-          bgColor="white"
+          hasImage={true}
           onClick={() =>
             handleOpenApp(
               "Google Chrome",
               "https://www.google.com/webhp?igu=1"
             )
           }
+          isAnimating={animatingApp === "Google Chrome"}
           title="Google Chrome"
         >
-          <svg viewBox="0 0 56 56" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="28" cy="28" r="20" fill="#4285F4"/>
-            <circle cx="28" cy="28" r="14" fill="white"/>
-            <circle cx="28" cy="28" r="8" fill="#4285F4"/>
-            <path d="M28 8 A20 20 0 0 1 42 18 L28 28 Z" fill="#EA4335"/>
-            <path d="M14 38 A20 20 0 0 1 14 18 L28 28 Z" fill="#34A853"/>
-            <path d="M42 38 A20 20 0 0 1 14 38 L28 28 Z" fill="#FBBC05"/>
-          </svg>
+          <img src="/images/chrome_icon.png" alt="Chrome" />
         </DockItem>
 
         {/* Resume */}
@@ -207,6 +224,7 @@ const Dock = () => {
           hasImage={false}
           bgColor="linear-gradient(135deg, #FF6B6B 0%, #EE5A6F 100%)"
           onClick={() => handleOpenApp("Resume", undefined, "Portfolio")}
+          isAnimating={animatingApp === "Resume"}
           title="Resume"
         >
           <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -222,6 +240,7 @@ const Dock = () => {
           hasImage={false}
           bgColor="linear-gradient(135deg, #000000 0%, #1a1a1a 100%)"
           onClick={() => handleOpenApp("Pac-Man", undefined, "Pacman")}
+          isAnimating={animatingApp === "Pac-Man"}
           title="Pac-Man Game"
         >
           <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -235,6 +254,7 @@ const Dock = () => {
           hasImage={false}
           bgColor="linear-gradient(135deg, #FF9500 0%, #FF6B00 100%)"
           onClick={() => handleOpenApp("Calculator")}
+          isAnimating={animatingApp === "Calculator"}
           title="Calculator"
         >
           <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -256,6 +276,7 @@ const Dock = () => {
           hasImage={false}
           bgColor="linear-gradient(135deg, #8E8E93 0%, #636366 100%)"
           onClick={() => handleOpenApp("Settings", undefined, "Settings")}
+          isAnimating={animatingApp === "Settings"}
           title="Settings"
         >
           <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -277,6 +298,7 @@ const Dock = () => {
           hasImage={false}
           bgColor="linear-gradient(135deg, #E3E3E3 0%, #C7C7CC 100%)"
           onClick={() => handleOpenApp("Trash")}
+          isAnimating={animatingApp === "Trash"}
           title="Trash"
         >
           <svg viewBox="0 0 56 56" fill="none" xmlns="http://www.w3.org/2000/svg">
