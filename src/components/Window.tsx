@@ -74,9 +74,12 @@ const MinimizeButton = styled(ControlButton)`
   }
 `;
 
-const MaximizeButton = styled(ControlButton)`
+const MaximizeButton = styled(ControlButton)<{ disabled?: boolean }>`
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  cursor: ${(props) => (props.disabled ? "not-allowed" : "pointer")};
+
   &:hover::before {
-    content: "⤢";
+    content: ${(props) => (props.disabled ? '""' : '"⤢"')};
     font-size: 10px;
   }
 `;
@@ -103,6 +106,7 @@ interface WindowProps {
   onClose: () => void;
   zIndex?: number;
   onFocus?: () => void;
+  fixedSize?: { width: number; height: number };
 }
 
 const Window = ({
@@ -112,6 +116,7 @@ const Window = ({
   onClose,
   zIndex = 100,
   onFocus,
+  fixedSize,
 }: WindowProps) => {
   const { darkMode } = useTheme();
   const [isMinimized, setIsMinimized] = useState(false);
@@ -128,6 +133,7 @@ const Window = ({
   };
 
   const handleMaximize = () => {
+    if (fixedSize) return; // 고정 크기일 경우 최대화 비활성화
     if (!isMaximized) {
       // 현재 크기 저장
       const rnd = document.querySelector(`[data-window-title="${title}"]`);
@@ -164,22 +170,24 @@ const Window = ({
       default={{
         x: initialPosition.x,
         y: initialPosition.y,
-        width: 800,
-        height: 600,
+        width: fixedSize?.width || 800,
+        height: fixedSize?.height || 600,
       }}
       position={
         isMaximized ? { x: windowSize.x, y: windowSize.y } : undefined
       }
       size={
-        isMaximized
+        fixedSize
+          ? { width: fixedSize.width, height: fixedSize.height }
+          : isMaximized
           ? { width: windowSize.width, height: windowSize.height }
           : undefined
       }
       bounds="parent"
-      minWidth={300}
-      minHeight={200}
+      minWidth={fixedSize?.width || 300}
+      minHeight={fixedSize?.height || 200}
       disableDragging={isMaximized}
-      enableResizing={!isMaximized}
+      enableResizing={!fixedSize && !isMaximized}
       style={{ zIndex }}
       onMouseDown={onFocus}
     >
@@ -188,7 +196,11 @@ const Window = ({
           <WindowControls>
             <CloseButton color="#ff5f57" onClick={onClose} />
             <MinimizeButton color="#ffbd2e" onClick={handleMinimize} />
-            <MaximizeButton color="#28ca42" onClick={handleMaximize} />
+            <MaximizeButton
+              color="#28ca42"
+              onClick={handleMaximize}
+              disabled={!!fixedSize}
+            />
           </WindowControls>
           <WindowTitle>{title}</WindowTitle>
           <div style={{ width: "60px" }} /> {/* Spacer for centering */}
