@@ -358,7 +358,7 @@ const Dock = () => {
         {/* Calculator */}
         <DockItem
           hasImage={true}
-          onClick={() => handleOpenApp("Calculator", undefined, "Calculator", { width: 400, height: 600 })}
+          onClick={() => handleOpenApp("Calculator", undefined, "Calculator", { width: 380, height: 650 })}
           isAnimating={animatingApp === "Calculator"}
           title="Calculator"
         >
