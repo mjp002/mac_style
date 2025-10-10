@@ -4,6 +4,7 @@ import Window from "./Window";
 import SettingsWindow from "./settings";
 import Profile from "../routes/profile";
 import PacmanGame from "../routes/pacman";
+import Calculator from "../routes/calculator";
 import { useTheme } from "./theme";
 
 const DockContainer = styled.div<{ darkMode: boolean }>`
@@ -85,8 +86,9 @@ interface App {
   id: number;
   name: string;
   url?: string;
-  component?: "Settings" | "Portfolio" | "Pacman";
+  component?: "Settings" | "Portfolio" | "Pacman" | "Calculator";
   initialPosition: { x: number; y: number };
+  fixedSize?: { width: number; height: number };
 }
 
 const Dock = () => {
@@ -101,7 +103,8 @@ const Dock = () => {
   const handleOpenApp = (
     appName: string,
     url?: string,
-    component?: "Settings" | "Portfolio" | "Pacman"
+    component?: "Settings" | "Portfolio" | "Pacman" | "Calculator",
+    fixedSize?: { width: number; height: number }
   ) => {
     // Trigger bounce animation
     setAnimatingApp(appName);
@@ -114,8 +117,10 @@ const Dock = () => {
       setAppId(newAppId);
 
       // 화면 크기를 고려한 위치 계산
-      const maxX = window.innerWidth - 800 - 100;
-      const maxY = window.innerHeight - 600 - 100;
+      const defaultWidth = fixedSize?.width || 800;
+      const defaultHeight = fixedSize?.height || 600;
+      const maxX = window.innerWidth - defaultWidth - 100;
+      const maxY = window.innerHeight - defaultHeight - 100;
 
       const newPosition = {
         x: Math.min(
@@ -136,6 +141,7 @@ const Dock = () => {
           url,
           component,
           initialPosition: newPosition,
+          fixedSize,
         },
       ]);
     }, 1000);
@@ -158,6 +164,9 @@ const Dock = () => {
     }
     if (app.component === "Pacman") {
       return <PacmanGame />;
+    }
+    if (app.component === "Calculator") {
+      return <Calculator />;
     }
     if (app.url) {
       return (
@@ -349,7 +358,7 @@ const Dock = () => {
         {/* Calculator */}
         <DockItem
           hasImage={true}
-          onClick={() => handleOpenApp("Calculator")}
+          onClick={() => handleOpenApp("Calculator", undefined, "Calculator", { width: 400, height: 600 })}
           isAnimating={animatingApp === "Calculator"}
           title="Calculator"
         >
@@ -386,6 +395,7 @@ const Dock = () => {
           onClose={() => handleCloseApp(app.id)}
           zIndex={topZIndex + index}
           onFocus={handleFocusApp}
+          fixedSize={app.fixedSize}
         >
           {renderAppContent(app)}
         </Window>
