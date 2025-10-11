@@ -13,7 +13,7 @@ const CalculatorContainer = styled.div<{ darkMode: boolean }>`
 `;
 
 const DisplayContainer = styled.div<{ darkMode: boolean }>`
-  background-color: ${(props) => (props.darkMode ? "#2d2d2d" : "#ffffff")};
+  background-color: ${(props) => (props.darkMode ? "#1e1e1e" : "#f0f0f0")};
   padding: 20px;
   margin-bottom: 16px;
   border-radius: 10px;
@@ -22,7 +22,7 @@ const DisplayContainer = styled.div<{ darkMode: boolean }>`
   flex-direction: column;
   justify-content: flex-end;
   gap: 8px;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
 `;
 
 const Expression = styled.div<{ darkMode: boolean }>`
@@ -36,7 +36,7 @@ const Expression = styled.div<{ darkMode: boolean }>`
   height: 24px;
 
   &::before {
-    content: '';
+    content: "";
     position: absolute;
     left: 0;
     top: 0;
@@ -44,7 +44,7 @@ const Expression = styled.div<{ darkMode: boolean }>`
     width: 50px;
     background: linear-gradient(
       to right,
-      ${(props) => (props.darkMode ? "#2d2d2d" : "#ffffff")},
+      ${(props) => (props.darkMode ? "#1e1e1e" : "#ffffff")},
       transparent
     );
     z-index: 1;
@@ -89,7 +89,7 @@ const Button = styled.button<{
   border: none;
   cursor: pointer;
   transition: all 0.1s ease;
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -285,25 +285,13 @@ const Calculator = () => {
       </DisplayContainer>
       <ButtonGrid>
         {/* Row 1 */}
-        <Button
-          darkMode={darkMode}
-          variant="clear"
-          onClick={clear}
-        >
+        <Button darkMode={darkMode} variant="clear" onClick={clear}>
           AC
         </Button>
-        <Button
-          darkMode={darkMode}
-          variant="clear"
-          onClick={toggleSign}
-        >
+        <Button darkMode={darkMode} variant="clear" onClick={toggleSign}>
           +/-
         </Button>
-        <Button
-          darkMode={darkMode}
-          variant="clear"
-          onClick={inputPercent}
-        >
+        <Button darkMode={darkMode} variant="clear" onClick={inputPercent}>
           %
         </Button>
         <Button
