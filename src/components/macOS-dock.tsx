@@ -5,6 +5,7 @@ import SettingsWindow from "./settings";
 import Profile from "../routes/profile";
 import PacmanGame from "../routes/pacman";
 import Calculator from "../routes/calculator";
+import Safari from "../routes/safari";
 import { useTheme } from "./theme";
 
 const DockContainer = styled.div<{ darkMode: boolean }>`
@@ -86,7 +87,7 @@ interface App {
   id: number;
   name: string;
   url?: string;
-  component?: "Settings" | "Portfolio" | "Pacman" | "Calculator";
+  component?: "Settings" | "Portfolio" | "Pacman" | "Calculator" | "Safari";
   initialPosition: { x: number; y: number };
   fixedSize?: { width: number; height: number };
 }
@@ -103,7 +104,7 @@ const Dock = () => {
   const handleOpenApp = (
     appName: string,
     url?: string,
-    component?: "Settings" | "Portfolio" | "Pacman" | "Calculator",
+    component?: "Settings" | "Portfolio" | "Pacman" | "Calculator" | "Safari",
     fixedSize?: { width: number; height: number }
   ) => {
     // Trigger bounce animation
@@ -167,6 +168,9 @@ const Dock = () => {
     }
     if (app.component === "Calculator") {
       return <Calculator />;
+    }
+    if (app.component === "Safari") {
+      return <Safari />;
     }
     if (app.url) {
       return (
@@ -313,6 +317,82 @@ const Dock = () => {
 
         <DockSeparator darkMode={darkMode} />
 
+        {/* Safari */}
+        <DockItem
+          hasImage={false}
+          bgColor="linear-gradient(135deg, #00A2FF 0%, #0070E0 100%)"
+          onClick={() => handleOpenApp("Safari", undefined, "Safari")}
+          isAnimating={animatingApp === "Safari"}
+          title="Safari"
+        >
+          <svg
+            viewBox="0 0 56 56"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle cx="28" cy="28" r="22" fill="white" fillOpacity="0.95" />
+            <circle
+              cx="28"
+              cy="28"
+              r="20"
+              fill="none"
+              stroke="#0070E0"
+              strokeWidth="1"
+            />
+            <path
+              d="M28 10 L30 20 L28 28 L20 30 L10 28 L20 26 L28 28 L26 20 Z"
+              fill="#FF3B30"
+              fillOpacity="0.9"
+            />
+            <path
+              d="M28 28 L26 36 L28 46 L36 26 L46 28 L36 30 L28 28 L30 36 Z"
+              fill="white"
+              fillOpacity="0.9"
+            />
+            <circle cx="28" cy="28" r="2" fill="#0070E0" />
+            <text
+              x="28"
+              y="12"
+              fontSize="6"
+              fill="#0070E0"
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              N
+            </text>
+            <text
+              x="28"
+              y="46"
+              fontSize="6"
+              fill="#0070E0"
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              S
+            </text>
+            <text
+              x="12"
+              y="30"
+              fontSize="6"
+              fill="#0070E0"
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              W
+            </text>
+            <text
+              x="44"
+              y="30"
+              fontSize="6"
+              fill="#0070E0"
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              E
+            </text>
+          </svg>
+        </DockItem>
+
         {/* Google Chrome */}
         <DockItem
           hasImage={true}
@@ -337,7 +417,11 @@ const Dock = () => {
           isAnimating={animatingApp === "Resume"}
           title="Resume"
         >
-          <img src="/images/notes.png" alt="Resume" />
+          <img
+            src="/images/notes.png"
+            alt="Resume"
+            style={{ width: "100%", height: "100%" }}
+          />
         </DockItem>
 
         {/* Pac-Man Game */}
@@ -358,11 +442,20 @@ const Dock = () => {
         {/* Calculator */}
         <DockItem
           hasImage={true}
-          onClick={() => handleOpenApp("Calculator", undefined, "Calculator", { width: 380, height: 650 })}
+          onClick={() =>
+            handleOpenApp("Calculator", undefined, "Calculator", {
+              width: 380,
+              height: 650,
+            })
+          }
           isAnimating={animatingApp === "Calculator"}
           title="Calculator"
         >
-          <img src="/images/mac_os_calc.png" alt="Calculator" />
+          <img
+            src="/images/mac_os_calc.png"
+            alt="Calculator"
+            style={{ width: "100%", height: "100%" }}
+          />
         </DockItem>
 
         <DockSeparator darkMode={darkMode} />
@@ -374,7 +467,11 @@ const Dock = () => {
           isAnimating={animatingApp === "Settings"}
           title="Settings"
         >
-          <img src="/images/mac_os_settings.png" alt="Settings" />
+          <img
+            src="/images/mac_os_settings.png"
+            alt="Settings"
+            style={{ width: "100%", height: "100%" }}
+          />
         </DockItem>
 
         {/* Trash */}
